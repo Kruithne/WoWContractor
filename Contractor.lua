@@ -114,12 +114,13 @@ do
     --[[
         _Contractor.OnEvent
         Used to handle events from an event frame.
-        @param {table} self Reference to the add-on table.
         @param {Frame} eventFrame Event handling frame.
         @param {string} event Identifier for the event type.
         @param {...} Extra parameters for the event.
     ]]--
-    _C.OnEvent = function(self, eventFrame, event, ...)
+    _C.OnEvent = function(eventFrame, event, ...)
+        local self = _C; -- Reference to add-on container.
+
         if event == "ADDON_LOADED" then
             local addonName = ...;
             if addonName == self.ADDON_NAME then
