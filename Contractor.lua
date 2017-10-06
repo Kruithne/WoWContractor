@@ -13,7 +13,8 @@ do
     --[[ Add-on Container ]]--
     local Contractor = {
         Strings = {},
-        staticContracts = {},
+        StaticContracts = {},
+        StaticContractMasters = {},
     };
 
     --[[ Strings Router ]]--
@@ -42,6 +43,24 @@ do
         local id = guid:match("^Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-%x+");
 
         return id and tonumber(id) or 0;
+    end
+
+    --[[
+        Contractor.AddStaticContract
+        Add a static contract for an NPC.
+        @param {number} npcID ID of the NPC to give the contract.
+        @param {string} contractID Unique identifier for the contract.
+        @param {table} contract Data defining the contract.
+    ]]--
+    Contractor.AddStaticContract = function(npcID, contractID, contract)
+        Contractor.StaticContracts[contractID] = contract;
+
+        local master = Contract.StaticContractMasters[npcID];
+        if master then
+            master[#master] = contractID;
+        else
+            Contract.StaticContractMasters[npcID] = {contractID};
+        end
     end
 
     -- Expose add-on container to the global environment.
