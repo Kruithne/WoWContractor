@@ -42,7 +42,7 @@ do
         @param {string} event Identifier for the event type.
         @param {...} Extra parameters for the event.
     ]]--
-    Events._OnEvent = function(eventFrame, event, ...)
+    Events.OnEvent = function(eventFrame, event, ...)
         if event == "ADDON_LOADED" then
             local addonName = ...;
             if addonName == Contractor.AddonName then
@@ -118,7 +118,7 @@ do
     Events.frame = CreateFrame("FRAME");
     Events.frame:RegisterEvent("ADDON_LOADED");
     Events.frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-    Events.frame:SetScript("OnEvent", _C._OnEvent);
+    Events.frame:SetScript("OnEvent", _C.OnEvent);
 
     -- Add event table into the add-on table.
     Contractor.Events = Events;
