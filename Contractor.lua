@@ -55,7 +55,7 @@ do
     Contractor.AddStaticContract = function(npcID, contractID, contract)
         Contractor.StaticContracts[contractID] = contract;
 
-        local master = Contract.StaticContractMasters[npcID];
+        local master = Contractor.StaticContractMasters[npcID];
         if master then
             master[#master] = contractID;
         else
