@@ -33,7 +33,7 @@ do
     end
 
     --[[
-        _Contractor.GetCreatureID
+        Contractor.GetCreatureID
         Obtain the NPC ID for a given target.
         @param {string} target UnitID to get the ID for.
         @return {number} ID of the unit or zero.

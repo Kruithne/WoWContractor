@@ -12,7 +12,7 @@ do
     local Events = {};
 
     --[[
-        _Contractor.Events.OnLoad
+        Contractor.Events.OnLoad
         Invoked when the add-on is loaded.
     ]]--
     Events.OnLoad = function()
@@ -31,7 +31,7 @@ do
     end
 
     --[[
-        _Contractor.Events.OnEvent
+        Contractor.Events.OnEvent
         Used to handle events from an event frame.
         @param {Frame} eventFrame Event handling frame.
         @param {string} event Identifier for the event type.
@@ -63,7 +63,7 @@ do
     end
 
     --[[
-        _Contractor.Events.OnGossip
+        Contractor.Events.OnGossip
         Invoked when the GOSSIP_SHOW event is triggered.
     ]]--
     Events.OnGossip = function()
@@ -76,7 +76,7 @@ do
     end
 
     --[[
-        _Contractor.Events.Hook_GossipTitleButton_OnClick
+        Contractor.Events.Hook_GossipTitleButton_OnClick
         External hook used for intercepting gossip title button clicks.
         @param {Frame} self Gossip frame.
         @param {Button} button Clicked button.

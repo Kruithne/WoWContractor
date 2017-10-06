@@ -22,7 +22,7 @@ do
     };
 
     --[[
-        _Contractor.UI.AddChatMessage
+        Contractor.UI.AddChatMessage
         Send a formatted chat message from this add-on.
         @param {string} msg Text to print into chat.
         @param {ColorMixin} [colour] Text colour, defaults to SUCCESS_COLOUR.
@@ -32,7 +32,7 @@ do
     end
 
     --[[
-        _Contractor.UI.AddGossipOption
+        Contractor.UI.AddGossipOption
         Add a custom gossip option to the gossip frame.
         @param {string} text Gossip option text.
     ]]--
