@@ -7,6 +7,11 @@
 	EventHandling.lua - Defines event handlers.
 ]]--
 do
+    --[[ Global References ]]--
+    local NUMGOSSIPBUTTONS = NUMGOSSIPBUTTONS;
+    local GossipResize = GossipResize;
+    local GossipFrame = GossipFrame;
+
     --[[ Constants ]]--
     local Contractor = _Contractor;
     local Events = {};
