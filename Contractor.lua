@@ -4,7 +4,7 @@
 
 	https://github.com/Kruithne/WoWContractor
 
-	Contractor.lua - Contains all of the addon code.
+	Contractor.lua - Contains all of the add-on code.
 ]]--
 do
     --[[ Constants ]]--
@@ -14,7 +14,7 @@ do
 
     --[[
         Contractor_AddChatMessage
-        Send a formatted chat message from this addon.
+        Send a formatted chat message from this add-on.
         @param {string} msg Text to print into chat.
         @param {ColorMixin} [colour] Text colour, defaults to SUCCESS_COLOUR.
     ]]--
