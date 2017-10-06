@@ -1,0 +1,12 @@
+## Interface: 70300
+## Title: Contractor
+## Notes: Roleplay Contracts
+## Author: Kruithne
+## Version: 1.0.0
+## SavedVariablesPerCharacter: ContractorData
+
+## X-Curse-Project-ID: contractor
+## X-Localization: enUS
+
+Contractor.lua
+Contracts.lua
