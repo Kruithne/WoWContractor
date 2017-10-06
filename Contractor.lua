@@ -59,7 +59,7 @@ do
         if master then
             master[#master] = contractID;
         else
-            Contract.StaticContractMasters[npcID] = {contractID};
+            Contractor.StaticContractMasters[npcID] = {contractID};
         end
     end
 
