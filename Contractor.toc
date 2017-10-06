@@ -9,4 +9,5 @@
 ## X-Localization: enUS
 
 Contractor.lua
+UI.lua
 Contracts.lua
