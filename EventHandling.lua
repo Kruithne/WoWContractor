@@ -21,9 +21,6 @@ do
         Invoked when the add-on is loaded.
     ]]--
     Events.OnLoad = function()
-        -- Unregister ADDON_LOADED event.
-        Events.frame:UnregisterEvent("ADDON_LOADED");
-
         -- Register new events.
         Events.frame:RegisterEvent("GOSSIP_SHOW");
         Events.frame:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
@@ -49,6 +46,7 @@ do
         if event == "ADDON_LOADED" then
             local addonName = ...;
             if addonName == Contractor.AddonName then
+                Events.frame:UnregisterEvent("ADDON_LOADED");
                 Events.OnLoad();
             end
         elseif event == "PLAYER_ENTERING_WORLD" then
