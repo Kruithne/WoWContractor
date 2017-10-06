@@ -68,7 +68,7 @@ do
         _Contractor.Events.OnGossip
         Invoked when the GOSSIP_SHOW event is triggered.
     ]]--
-    _C.OnGossip = function()
+    Events.OnGossip = function()
         local targetID = Contractor:GetCreatureID("npc");
         local contract = Contractor.staticContracts[targetID];
 
