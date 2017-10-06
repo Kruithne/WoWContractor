@@ -118,7 +118,7 @@ do
     Events.frame = CreateFrame("FRAME");
     Events.frame:RegisterEvent("ADDON_LOADED");
     Events.frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-    Events.frame:SetScript("OnEvent", _C.OnEvent);
+    Events.frame:SetScript("OnEvent", Events.OnEvent);
 
     -- Add event table into the add-on table.
     Contractor.Events = Events;
