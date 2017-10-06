@@ -12,3 +12,4 @@ Contractor.lua
 UI.lua
 EventHandling.lua
 Contracts.lua
+locale/enUS.lua

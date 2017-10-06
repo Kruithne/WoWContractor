@@ -43,13 +43,13 @@ do
     Events._OnEvent = function(eventFrame, event, ...)
         if event == "ADDON_LOADED" then
             local addonName = ...;
-            if addonName == Contractor.ADDON_NAME then
+            if addonName == Contractor.AddonName then
                 Events.OnLoad();
             end
         elseif event == "PLAYER_ENTERING_WORLD" then
             -- Display load message in chat.
-            local version = GetAddOnMetadata(Contractor.ADDON_NAME, "Version");
-            Contractor.UI.AddChatMessage(Contractor.ADDON_NAME .. " v" .. version .. " has been loaded!");
+            local version = GetAddOnMetadata(Contractor.AddonName, "Version");
+            Contractor.UI.AddChatMessage(Contractor.VersionLoaded:format(Contractor.AddonName, version));
 
             -- Unregister the event.
             eventFrame:UnregisterEvent("PLAYER_ENTERING_WORLD");
@@ -83,7 +83,7 @@ do
                 end
             end
 
-            frame:SetText("I'm looking for a contract.");
+            frame:SetText(Contractor.GossipLookingForContract);
             GossipResize(frame);
             frame:SetID(index);
             frame.type = "RoleplayContract";

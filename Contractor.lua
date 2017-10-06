@@ -7,11 +7,29 @@
 	Contractor.lua - Defines the core API for the add-on.
 ]]--
 do
+    --[[ Global References ]]--
+    local pairs = pairs;
+
     --[[ Add-on Container ]]--
     local Contractor = {
-        ADDON_NAME = "Contractor",
+        Strings = {},
         staticContracts = {},
     };
+
+    --[[ Strings Router ]]--
+    setmetatable(Contractor, { __index = function(t, k) return t.Strings[k]; end });
+
+    --[[
+        Contractor.ApplyLocalization
+        Apply a table of localization strings to the add-on.
+        @param {table} locale Contains locale strings.
+    ]]--
+    Contractor.ApplyLocalization = function(locale)
+        local strings = Contractor.Strings;
+        for key, value in pairs(locale) do
+            strings[key] = value;
+        end
+    end
 
     --[[
         _Contractor.GetCreatureID
