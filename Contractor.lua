@@ -92,15 +92,14 @@ do
         _Contractor.OnLoad
         Invoked when the add-on is loaded.
         @param {table} self Reference to the add-on table.
-        @param {Frame} eventFrame Event handling frame.
     ]]--
-    _C.OnLoad = function(self, eventFrame)
+    _C.OnLoad = function(self)
         -- Unregister ADDON_LOADED event.
-        eventFrame:UnregisterEvent("ADDON_LOADED");
+        self.eventFrame:UnregisterEvent("ADDON_LOADED");
 
         -- Register new events.
-        eventFrame:RegisterEvent("GOSSIP_SHOW");
-        eventFrame:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
+        self.eventFrame:RegisterEvent("GOSSIP_SHOW");
+        self.eventFrame:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
 
         -- Initiate persistant storage table.
         if not ContractorData then
@@ -124,7 +123,7 @@ do
         if event == "ADDON_LOADED" then
             local addonName = ...;
             if addonName == self.ADDON_NAME then
-                self:OnLoad(eventFrame);
+                self:OnLoad();
             end
         elseif event == "PLAYER_ENTERING_WORLD" then
             -- Display load message in chat.
