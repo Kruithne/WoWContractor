@@ -145,11 +145,11 @@ do
     end
 
     --[[ Event Handler ]]--
-    _C.eventFrame = CreateFrame('FRAME');
-    _C.eventFrame:RegisterEvent('ADDON_LOADED');
-    _C.eventFrame:RegisterEvent('PLAYER_ENTERING_WORLD');
-    _C.eventFrame:SetScript('OnEvent', _C.OnEvent);
+    _C.eventFrame = CreateFrame("FRAME");
+    _C.eventFrame:RegisterEvent("ADDON_LOADED");
+    _C.eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    _C.eventFrame:SetScript("OnEvent", _C.OnEvent);
 
     -- Expose add-on container to the global environment.
-    _G['_Contractor'] = Contractor;
+    _G["_Contractor"] = Contractor;
 end
