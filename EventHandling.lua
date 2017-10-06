@@ -7,11 +7,6 @@
 	EventHandling.lua - Defines event handlers.
 ]]--
 do
-    --[[ Global References ]]--
-    local NUMGOSSIPBUTTONS = NUMGOSSIPBUTTONS;
-    local GossipResize = GossipResize;
-    local GossipFrame = GossipFrame;
-
     --[[ Constants ]]--
     local Contractor = _Contractor;
     local Events = {};
@@ -76,27 +71,7 @@ do
         local contract = Contractor.staticContracts[targetID];
 
         if contract then
-            local frame, index;
-
-            for i = 1, NUMGOSSIPBUTTONS do
-                frame = _G["GossipTitleButton" .. i];
-                if not frame:IsVisible() then
-                    index = i;
-                    break;
-                end
-            end
-
-            frame:SetText(Contractor.GossipLookingForContract);
-            GossipResize(frame);
-            frame:SetID(index);
-            frame.type = "RoleplayContract";
-
-            local icon = _G[frame:GetName() .. "GossipIcon"];
-            icon:SetTexture("Interface\\GossipFrame\\BattleMasterGossipIcon");
-            icon:SetVertexColor(1, 1, 1, 1);
-
-            GossipFrame.buttonIndex = GossipFrame.buttonIndex + 1;
-            frame:Show();
+            Contractor.UI.AddGossipOption(Contractor.GossipLookingForContract);
         end
     end
 
