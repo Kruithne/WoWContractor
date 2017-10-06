@@ -23,23 +23,6 @@ do
     end
 
     --[[
-        Contractor_CheckLoadState
-        Check if the addon is ready to be loaded.
-        @param {Frame} self Event handling frame.
-    ]]--
-    local function Contractor_CheckLoadState(self)
-        if self.eventAddonHasLoaded and self.eventPlayerEnteredWorld then
-            -- Unregister events used for loading.
-            self:UnregisterEvent('ADDON_LOADED');
-            self:UnregisterEvent('PLAYER_ENTERING_WORLD');
-
-            -- Display load message.
-            local version = GetAddOnMetadata(ADDON_NAME, 'Version');
-            Contractor_AddChatMessage(ADDON_NAME .. ' v' .. version .. ' has been loaded!');
-        end
-    end
-
-    --[[
         Contractor_OnEvent
         Used to handle events from an event frame.
         @param {Frame} self Event handling frame.
@@ -50,12 +33,16 @@ do
         if event == 'ADDON_LOADED' then
             local addonName = ...;
             if addonName == ADDON_NAME then
-                self.eventAddonHasLoaded = true;
-                Contractor_CheckLoadState(self);
+                -- ToDo: Do stuff here.
+                self:UnregisterEvent('ADDON_LOADED');
             end
         elseif event == 'PLAYER_ENTERING_WORLD' then
-            self.eventPlayerEnteredWorld = true;
-            Contractor_CheckLoadState(self);
+            -- Display load message in chat.
+            local version = GetAddOnMetadata(ADDON_NAME, 'Version');
+            Contractor_AddChatMessage(ADDON_NAME .. ' v' .. version .. ' has been loaded!');
+
+            -- Unregister the event.
+            self:UnregisterEvent('PLAYER_ENTERING_WORLD');
         end
     end
 
