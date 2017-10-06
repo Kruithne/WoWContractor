@@ -7,38 +7,33 @@
 	Contractor.lua - Contains all of the add-on code.
 ]]--
 do
-    --[[ Constants ]]--
-    local ADDON_NAME = "Contractor";
-    local SUCCESS_COLOUR = CreateColor(0.5803, 1, 0);
-    local ERROR_COLOUR = CreateColor(1, 0.5215, 0);
-    local PREDEFINED_CONTRACTS = {};
+    --[[ Add-on Container ]]--
+    local _C = {
+        ADDON_NAME = "Contractor",
+        SUCCESS_COLOUR = CreateColor(0.5803, 1, 0),
+        ERROR_COLOUR = CreateColor(1, 0.5215, 0),
+        staticContracts = {},
+    };
 
     --[[
-        Contractor_SetPredefinedTable
-        Set the table to source pre-defined contracts from.
-        @param {table} tbl New table filled with contract data.
-    ]]--
-    function Contractor_SetPredefinedTable(tbl)
-        PREDEFINED_CONTRACTS = tbl;
-    end
-
-    --[[
-        Contractor_AddChatMessage
+        _Contractor.AddChatMessage
         Send a formatted chat message from this add-on.
+        @param {table} self Reference to the add-on table.
         @param {string} msg Text to print into chat.
         @param {ColorMixin} [colour] Text colour, defaults to SUCCESS_COLOUR.
     ]]--
-    local function Contractor_AddChatMessage(msg, colour)
-        DEFAULT_CHAT_FRAME:AddMessage((colour or SUCCESS_COLOUR):WrapTextInColorCode(msg));
+    _C.AddChatMessage = function(self, msg, colour)
+        DEFAULT_CHAT_FRAME:AddMessage((colour or self.SUCCESS_COLOUR):WrapTextInColorCode(msg));
     end
 
     --[[
-        Contractor_GetCreatureID
+        _Contractor.GetCreatureID
         Obtain the NPC ID for a given target.
+        @param {table} self Reference to the add-on table.
         @param {string} target UnitID to get the ID for.
         @return {number} ID of the unit or zero.
     ]]--
-    local function Contractor_GetCreatureID(target)
+    _C.GetCreatureID = function(self, target)
         local guid = UnitGUID(target);
         local id = guid:match("^Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-%x+");
 
@@ -46,13 +41,13 @@ do
     end
 
     --[[
-        Contractor_OnGossip
+        _Contractor.OnGossip
         Invoked when the GOSSIP_SHOW event is triggered.
-        @param {Frame} self Event handling frame.
+        @param {table} self Reference to the add-on table.
     ]]--
-    local function Contractor_OnGossip(self)
-        local targetID = Contractor_GetCreatureID("npc");
-        local contract = PREDEFINED_CONTRACTS[targetID];
+    _C.OnGossip = function(self)
+        local targetID = self:GetCreatureID("npc");
+        local contract = self.staticContracts[targetID];
 
         if contract then
             local frame, index;
@@ -80,17 +75,32 @@ do
     end
 
     --[[
-        Contractor_OnLoad
-        Invoked when the add-on is loaded.
-        @param {Frame} self Event handling frame.
+        _Contractor.Hook_GossipTitleButton_OnClick
+        External hook used for intercepting gossip title button clicks.
+        @param {Frame} self Gossip frame.
+        @param {Button} button Clicked button.
     ]]--
-    local function Contractor_OnLoad(self)
+    _C.Hook_GossipTitleButton_OnClick = function(self, button)
+        if self.type == "RoleplayContract" then
+            _C:AddChatMessage("Clicked.");
+        else
+            self._GossipTitleButton_OnClick(self, button);
+        end
+    end
+
+    --[[
+        _Contractor.OnLoad
+        Invoked when the add-on is loaded.
+        @param {table} self Reference to the add-on table.
+        @param {Frame} eventFrame Event handling frame.
+    ]]--
+    _C.OnLoad = function(self, eventFrame)
         -- Unregister ADDON_LOADED event.
-        self:UnregisterEvent("ADDON_LOADED");
+        eventFrame:UnregisterEvent("ADDON_LOADED");
 
         -- Register new events.
-        self:RegisterEvent("GOSSIP_SHOW");
-        self:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
+        eventFrame:RegisterEvent("GOSSIP_SHOW");
+        eventFrame:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
 
         -- Initiate persistant storage table.
         if not ContractorData then
@@ -98,50 +108,48 @@ do
         end
 
         -- Hook Gossip handling functions.
-        local _GossipTitleButton_OnClick = GossipTitleButton_OnClick;
-        GossipTitleButton_OnClick = function(self, button)
-            if self.type == "RoleplayContract" then
-                Contractor_AddChatMessage("Clicked");
-            else
-                _GossipTitleButton_OnClick(self, button);
-            end
-        end
+        self._GossipTitleButton_OnClick = GossipTitleButton_OnClick;
+        GossipTitleButton_OnClick = self.Hook_GossipTitleButton_OnClick;
     end
 
     --[[
-        Contractor_OnEvent
+        _Contractor.OnEvent
         Used to handle events from an event frame.
-        @param {Frame} self Event handling frame.
+        @param {table} self Reference to the add-on table.
+        @param {Frame} eventFrame Event handling frame.
         @param {string} event Identifier for the event type.
         @param {...} Extra parameters for the event.
     ]]--
-    local function Contractor_OnEvent(self, event, ...)
+    _C.OnEvent = function(self, eventFrame, event, ...)
         if event == "ADDON_LOADED" then
             local addonName = ...;
-            if addonName == ADDON_NAME then
-                Contractor_OnLoad(self);
+            if addonName == self.ADDON_NAME then
+                self:OnLoad(eventFrame);
             end
         elseif event == "PLAYER_ENTERING_WORLD" then
             -- Display load message in chat.
-            local version = GetAddOnMetadata(ADDON_NAME, "Version");
-            Contractor_AddChatMessage(ADDON_NAME .. " v" .. version .. " has been loaded!");
+            local version = GetAddOnMetadata(self.ADDON_NAME, "Version");
+            self:AddChatMessage(self.ADDON_NAME .. " v" .. version .. " has been loaded!");
 
             -- Unregister the event.
-            self:UnregisterEvent("PLAYER_ENTERING_WORLD");
+            eventFrame:UnregisterEvent("PLAYER_ENTERING_WORLD");
         elseif event == "GOSSIP_SHOW" then
-            Contractor_OnGossip(self);
+            self:OnGossip();
         elseif event == "PLAYER_CHANGED_TARGET" then
             -- ToDo: Remove, this is for debug.
-            local targetID = Contractor_GetCreatureID("target");
+            local targetID = self:GetCreatureID("target");
             if targetID > 0 then
-                Contractor_AddChatMessage("Target ID: " .. targetID);
+                self:AddChatMessage("Target ID: " .. targetID);
             end
         end
     end
 
     --[[ Event Handler ]]--
-    local eventFrame = CreateFrame('FRAME');
-    eventFrame:RegisterEvent('ADDON_LOADED');
-    eventFrame:RegisterEvent('PLAYER_ENTERING_WORLD');
-    eventFrame:SetScript('OnEvent', Contractor_OnEvent);
+    _C.eventFrame = CreateFrame('FRAME');
+    _C.eventFrame:RegisterEvent('ADDON_LOADED');
+    _C.eventFrame:RegisterEvent('PLAYER_ENTERING_WORLD');
+    _C.eventFrame:SetScript('OnEvent', _C.OnEvent);
+
+    -- Expose add-on container to the global environment.
+    _G['_Contractor'] = Contractor;
 end
