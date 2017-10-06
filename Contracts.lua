@@ -7,5 +7,10 @@
 	Contracts.lua - Defines pre-made contracts for players.
 ]]--
 do
-    -- ToDo: Use this.
+    Contractor_SetPredefinedTable({
+        [44237] = {
+            ["ELW_BEARS"] = { target = {822}, count = 5 },
+            ["ELW_WIZARDS"] = { target = {474}, count = 5 }
+        }
+    });
 end
