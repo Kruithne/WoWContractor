@@ -131,7 +131,7 @@ do
             Contractor.UI.SetGossipText(Contractor.GossipAcceptedText:format(fullText));
             Contractor.UI.AddGossipOption(Contractor.GossipContractOkay, "ContractorClose", "GossipGossipIcon");
 
-            PlaySound(876) -- igquestlistclose
+            PlaySound(876); -- igquestlistclose
         elseif self.type == "ContractorProgress" then
             local masterID = Contractor.GetCreatureID("npc");
             local active = Contractor.GetActiveContract(masterID);
