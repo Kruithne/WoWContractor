@@ -9,6 +9,8 @@
 do
     --[[ Global References ]]--
     local pairs = pairs;
+    local tonumber = tonumber;
+    local UnitGUID = UnitGUID;
     local UnitIsPlayer = UnitIsPlayer;
 
     --[[ Add-on Container ]]--
