@@ -21,9 +21,8 @@ do
         Events.frame:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
 
         -- Initiate persistant storage table.
-        if not ContractorData then
-            ContractorData = {};
-        end
+        if not ContractorData then ContractorData = {}; end
+        Contractor.StoredData = ContractorData;
 
         -- Hook Gossip handling functions.
         Events._GossipTitleButton_OnClick = GossipTitleButton_OnClick;

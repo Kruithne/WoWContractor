@@ -62,7 +62,7 @@ do
             return Contractor.StaticContractMasters[unitID] or nil;
         end
     end
-
+    
     --[[
         Contractor.AddStaticContract
         Add a static contract for an NPC.
