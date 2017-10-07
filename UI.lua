@@ -11,6 +11,10 @@ do
     local NUMGOSSIPBUTTONS = NUMGOSSIPBUTTONS;
     local GossipResize = GossipResize;
     local GossipFrame = GossipFrame;
+    local GossipGreetingText = GossipGreetingText;
+    local UIErrorsFrame = UIErrorsFrame;
+    local ERR_QUEST_ADD_FOUND_SII = ERR_QUEST_ADD_FOUND_SII;
+    local YELLOW_FONT_COLOR = YELLOW_FONT_COLOR;
 
     --[[ Constants ]]--
     local Contractor = _Contractor;
@@ -32,11 +36,32 @@ do
     end
 
     --[[
+        Contractor.UI.ClearGossipOptions
+        Remove all gossip options currently available.
+    ]]--
+    UI.ClearGossipOptions = function()
+        for i = 1, NUMGOSSIPBUTTONS do
+            _G["GossipTitleButton" .. i]:Hide();
+        end
+    end
+
+    --[[
+        Contractor.UI.SetGossipText
+        Set the current gossip text.
+        @param {string} text
+    ]]--
+    UI.SetGossipText = function(text)
+        GossipGreetingText:SetText(text);
+    end
+
+    --[[
         Contractor.UI.AddGossipOption
         Add a custom gossip option to the gossip frame.
         @param {string} text Gossip option text.
+        @param {string} value Button value.
+        @param {string} [gossipIcon] Optional icon to use.
     ]]--
-    UI.AddGossipOption = function(text)
+    UI.AddGossipOption = function(text, value, gossipIcon)
         -- Take no action if the GossipFrame isn't shown.
         if not GossipFrame:IsVisible() then
             return;
@@ -56,15 +81,26 @@ do
         frame:SetText(text);
         GossipResize(frame);
         frame:SetID(index);
-        frame.type = "RoleplayContract";
+        frame.type = value;
 
         -- Apply the icon we want.
         local icon = _G[frame:GetName() .. "GossipIcon"];
-        icon:SetTexture("Interface\\GossipFrame\\BattleMasterGossipIcon");
+        icon:SetTexture("Interface\\GossipFrame\\" .. (gossipIcon or "BattleMasterGossipIcon"));
         icon:SetVertexColor(1, 1, 1, 1);
 
         GossipFrame.buttonIndex = GossipFrame.buttonIndex + 1;
         frame:Show();
+    end
+
+    --[[
+        Contractor.UI.ShowCriteraUpdate
+        Show a quest critera update message.
+        @param {string} description Objective description.
+        @param {number} fulfilled How many of the objective is done?
+        @param {number} required How many of the objective is needed in total?
+    ]]--
+    UI.ShowCriteraUpdate = function(description, fulfilled, required)
+        UIErrorsFrame:AddMessage(ERR_QUEST_ADD_FOUND_SII:format(description, fulfilled, required), YELLOW_FONT_COLOR:GetRGB());
     end
 
     -- Add UI table to the add-on table.

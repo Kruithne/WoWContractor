@@ -7,6 +7,11 @@
 	EventHandling.lua - Defines event handlers.
 ]]--
 do
+    --[[ Global References ]]--
+    local pairs = pairs;
+    local mathrandom = math.random;
+    local CloseGossip = CloseGossip;
+
     --[[ Constants ]]--
     local Contractor = _Contractor;
     local Events = {};
@@ -18,11 +23,29 @@ do
     Events.OnLoad = function()
         -- Register new events.
         Events.frame:RegisterEvent("GOSSIP_SHOW");
+        Events.frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
         Events.frame:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
 
         -- Initiate persistant storage table.
         if not ContractorData then ContractorData = {}; end
         Contractor.StoredData = ContractorData;
+
+        -- Setup indexing.
+        if ContractorData.ActiveContracts then
+            local index = Contractor.Index;
+            for masterID, contract in pairs(ContractorData.ActiveContracts) do
+                for i = 1, #contract.targets do
+                    local target = contract.targets[i];
+                    local entry = index[target];
+
+                    if entry then
+                        entry[#entry][masterID] = true;
+                    else
+                        index[target] = { [masterID] = true };
+                    end
+                end
+            end
+        end
 
         -- Hook Gossip handling functions.
         Events._GossipTitleButton_OnClick = GossipTitleButton_OnClick;
@@ -50,6 +73,11 @@ do
 
             -- Unregister the event.
             eventFrame:UnregisterEvent("PLAYER_ENTERING_WORLD");
+        elseif event == "COMBAT_LOG_EVENT_UNFILTERED" then
+            local _, subEvent, _, _, _, _, _, guid = ...;
+            if subEvent == "UNIT_DIED" then
+                Contractor.RegisterCreatureDeath(Contractor.GetCreatureIDFromGUID(guid));
+            end
         elseif event == "GOSSIP_SHOW" then
             Events.OnGossip();
         elseif event == "PLAYER_CHANGED_TARGET" then
@@ -66,9 +94,21 @@ do
         Invoked when the GOSSIP_SHOW event is triggered.
     ]]--
     Events.OnGossip = function()
-        local contracts = Contractor.GetAvailableContracts("npc");
-        if #contracts then
-            Contractor.UI.AddGossipOption(Contractor.GossipLookingForContract);
+        local masterID = Contractor.GetCreatureID("npc");
+        local active = Contractor.GetActiveContract(masterID);
+
+        if active then
+            if Contractor.IsContractComplete(active) then
+                Contractor.UI.AddGossipOption(Contractor.GossipContractComplete, "ContractorFinalize");
+            else
+                Contractor.UI.AddGossipOption(Contractor.GossipContractProgress, "ContractorProgress");
+                Contractor.UI.AddGossipOption(Contractor.GossipContractAbandon, "ContractorAbandon");
+            end
+        else
+            local available = Contractor.GetAvailableContracts(masterID);
+            if available and #available > 0 then
+                Contractor.UI.AddGossipOption(Contractor.GossipLookingForContract, "ContractorAccept");
+            end
         end
     end
 
@@ -79,8 +119,38 @@ do
         @param {Button} button Clicked button.
     ]]--
     Events.Hook_GossipTitleButton_OnClick = function(self, button)
-        if self.type == "RoleplayContract" then
-            Contractor.UI.AddChatMessage("Clicked.");
+        if self.type == "ContractorAccept" then
+            local masterID = Contractor.GetCreatureID("npc");
+            local contracts = Contractor.GetAvailableContracts(masterID);
+            local contract = contracts[mathrandom(#contracts)];
+
+            Contractor.SetActiveContract(masterID, contract);
+
+            local fullText = contract.textFull:format(contract.count);
+            Contractor.UI.ClearGossipOptions();
+            Contractor.UI.SetGossipText(Contractor.GossipAcceptedText:format(fullText));
+            Contractor.UI.AddGossipOption(Contractor.GossipContractOkay, "ContractorClose", "GossipGossipIcon");
+        elseif self.type == "ContractorProgress" then
+            local masterID = Contractor.GetCreatureID("npc");
+            local active = Contractor.GetActiveContract(masterID);
+
+            Contractor.UI.ClearGossipOptions();
+            Contractor.UI.SetGossipText(Contractor.GossipProgressText:format(active.progress, active.textShort:lower(), active.count));
+            Contractor.UI.AddGossipOption(Contractor.GossipContractOkay, "ContractorClose", "GossipGossipIcon");
+        elseif self.type == "ContractorFinalize" then
+            Contractor.UI.ClearGossipOptions();
+            Contractor.UI.SetGossipText("Finalize text.");
+        elseif self.type == "ContractorAbandon" then
+            Contractor.UI.ClearGossipOptions();
+            Contractor.UI.SetGossipText(Contractor.GossipAbandonConfirm);
+
+            Contractor.UI.AddGossipOption(Contractor.GossipAbandonConfirmOption, "ContractorAbandonConfirm", "GossipGossipIcon");
+            Contractor.UI.AddGossipOption(Contractor.GossipAbandonAbortOption, "ContractorClose", "GossipGossipIcon");
+        elseif self.type == "ContractorAbandonConfirm" then
+            Contractor.AbandonActiveContract(Contractor.GetCreatureID("npc"));
+            CloseGossip();
+        elseif self.type == "ContractorClose" then
+            CloseGossip();
         else
             Events._GossipTitleButton_OnClick(self, button);
         end
