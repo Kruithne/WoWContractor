@@ -10,7 +10,9 @@ do
     --[[ Global References ]]--
     local pairs = pairs;
     local tonumber = tonumber;
+    local mathrandom = math.random;
     local UnitGUID = UnitGUID;
+    local UnitName = UnitName;
     local UnitIsPlayer = UnitIsPlayer;
     local UnitFullName = UnitFullName;
 
@@ -159,7 +161,16 @@ do
     end
 
     --[[
-        Contract.IsContractComplete
+        Contractor.HandleReward
+        Present the player with a reward.
+    ]]--
+    Contractor.HandleReward = function()
+        local chat = ChatTypeInfo["MONSTER_EMOTE"];
+        DEFAULT_CHAT_FRAME:AddMessage(Contractor.RewardEmote:format(UnitName("npc"), mathrandom(2, 20)), chat.r, chat.g, chat.b);
+    end
+
+    --[[
+        Contractor.IsContractComplete
         Check if the given contract is complete.
         @param {table} contract Active contract.
         @return {boolean} True if complete.
