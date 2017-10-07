@@ -12,6 +12,7 @@ do
     local tonumber = tonumber;
     local UnitGUID = UnitGUID;
     local UnitIsPlayer = UnitIsPlayer;
+    local UnitFullName = UnitFullName;
 
     --[[ Add-on Container ]]--
     local Contractor = {
@@ -62,7 +63,18 @@ do
             return Contractor.StaticContractMasters[unitID] or nil;
         end
     end
-    
+
+    --[[
+        Contractor.GetActiveContract
+        Obtain the active contract for a unit.
+        @param {string} unit Which unit to check a contract for.
+        @return {table} Active contract data.
+    ]]--
+    Contractor.GetActiveContract = function(unit)
+        local masterID = UnitIsPlayer(unit) and UnitFullName(unit) or Contractor.GetCreatureID(unit);
+        return masterID and Contractor.StoredData.ActiveContracts[masterID] or nil;
+    end
+
     --[[
         Contractor.AddStaticContract
         Add a static contract for an NPC.
