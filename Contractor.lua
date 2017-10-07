@@ -9,6 +9,7 @@
 do
     --[[ Global References ]]--
     local pairs = pairs;
+    local UnitIsPlayer = UnitIsPlayer;
 
     --[[ Add-on Container ]]--
     local Contractor = {
@@ -43,6 +44,21 @@ do
         local id = guid:match("^Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-%x+");
 
         return id and tonumber(id) or 0;
+    end
+
+    --[[
+        Contractor.GetAvailableContracts
+        Return a table of contracts available from the given unit.
+        @param {string} unit Which unit to check contracts for.
+        @return {table} Table containing contract IDs.
+    ]]--
+    Contractor.GetAvailableContracts = function(unit)
+        if UnitIsPlayer(unit) then
+            -- ToDo: Implement player support.
+        else
+            local unitID = Contractor.GetCreatureID(unit);
+            return Contractor.StaticContractMasters[unitID] or nil;
+        end
     end
 
     --[[
