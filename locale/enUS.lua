@@ -22,9 +22,13 @@ do
         GossipAbandonAbortOption = "Actually, I've changed my mind.",
         RewardEmote = "%s hands you a small coin purse containing %d silvers.",
 
+        FrameContracts = "Contracts",
+
         ContractElwynnBearsFull = "slay %d bears roaming the forests of Elwynn",
         ContractElwynnBearsShort = "Bears slain",
+        ContractElwynnBearsTitle = "Contract: Forest Bears",
         ContractElwynnWizardsFull = "kill %d rogue wizards operating in Elwynn Forest",
         ContractElwynnWizardsShort = "Rogue Wizards killed",
+        ContractElwynnWizardsTitle = "Contract: Rogue Wizards",
     });
 end

@@ -17,6 +17,7 @@ do
     local YELLOW_FONT_COLOR = YELLOW_FONT_COLOR;
 
     --[[ Constants ]]--
+    local BUTTON_HEIGHT = 84;
     local Contractor = _Contractor;
     local UI = {
         Colours = {
@@ -101,6 +102,98 @@ do
     ]]--
     UI.ShowCriteraUpdate = function(description, fulfilled, required)
         UIErrorsFrame:AddMessage(ERR_QUEST_ADD_FOUND_SII:format(description, fulfilled, required), YELLOW_FONT_COLOR:GetRGB());
+    end
+
+    --[[
+        Contractor.UI.UpdateContractPane
+        Updates the contents of the contract pane.
+    ]]--
+    UI.UpdateContractPane = function()
+        local contracts = Contractor.GetActiveContracts();
+        local scrollFrame = ContractorFrameViewContainer;
+        local offset = HybridScrollFrame_GetOffset(scrollFrame);
+        local buttons = scrollFrame.buttons;
+        local numButtons = #buttons;
+        local numContracts = #contracts;
+        local button, index;
+
+        for i = 1, numButtons do
+            local button = buttons[i];
+            index = offset + i;
+
+            if index <= numContracts then
+                local contract = contracts[index];
+                button.title:SetText(contract.title);
+                button.comment:SetText(ERR_QUEST_ADD_FOUND_SII:format(contract.textShort, contract.progress, contract.count));
+                button.master:SetText(contract.masterName);
+
+                button:SetHeight(50);
+
+                button:Show();
+                button.index = index;
+            else
+                button:Hide();
+            end
+        end
+
+        HybridScrollFrame_Update(scrollFrame, numContracts * BUTTON_HEIGHT, numButtons * BUTTON_HEIGHT);
+    end
+
+    --[[
+        Contractor.UI.OnContractButtonClick
+        Invoked when a player clicks on a button in the contract list.
+    ]]--
+    UI.OnContractButtonClick = function()
+        local uiScale, x, y = UIParent:GetEffectiveScale(), GetCursorPosition();
+        ToggleDropDownMenu(nil, nil, ContractorFrameDropDown, "UIParent", x / uiScale, y / uiScale);
+    end
+
+    --[[
+        Contractor.UI.OnContractMenuOpen
+        Invoked when a contract context menu is opened.
+    ]]--
+    UI.OnContractMenuOpen = function(frame, level, menuList)
+        -- ToDo: Add proper options. Localize.
+        UIDropDownMenu_AddButton({ text = "Hello poppet." }, level);
+    end
+
+    --[[
+        Contractor.UI.ShowContractPane
+        Show the contract management frame.
+    ]]--
+    UI.ShowContractPane = function()
+        if not UI.hasRenderedBefore then
+            ContractorFrameTitleText:SetText(Contractor.FrameContracts);
+            SetPortraitToTexture(ContractorFrameIcon, "Interface\\ICONS\\Achievement_Ashran_Tourofduty");
+
+            local container = ContractorFrameViewContainer;
+            HybridScrollFrame_CreateButtons(container, "ContractorButtonTemplate", 0, 0);
+
+            ContractorFrameViewButton:SetText("Create Contract"); -- ToDo: Localize.
+
+            UIDropDownMenu_Initialize(ContractorFrameDropDown, UI.OnContractMenuOpen, "MENU");
+            for _, button in next, container.buttons do
+                button:SetScript("OnClick", UI.OnContractButtonClick);
+            end
+
+            local scrollFrame = ContractorFrameViewContainerScrollBar;
+            scrollFrame.Show = function(self)
+                container:SetWidth(304);
+                for _, button in next, container.buttons do button:SetWidth(301); end
+                getmetatable(self).__index.Show(self);
+            end
+
+            scrollFrame.Hide = function(self)
+                container:SetWidth(320);
+                for _, button in next, container.buttons do button:SetWidth(320); end
+                getmetatable(self).__index.Hide(self);
+            end
+
+            UI.hasRenderedBefore = true;
+        end
+
+        UI.UpdateContractPane();
+        ContractorFrame:Show();
     end
 
     -- Add UI table to the add-on table.

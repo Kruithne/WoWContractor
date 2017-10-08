@@ -96,6 +96,21 @@ do
     end
 
     --[[
+        Contractor.GetActiveContracts
+        Get the table containing all active contracts.
+        @return {table}
+    ]]--
+    Contractor.GetActiveContracts = function()
+        local contracts = {};
+        if Contractor.StoredData.ActiveContracts then
+            for _, contract in pairs(Contractor.StoredData.ActiveContracts) do
+                contracts[#contracts+1] = contract;
+            end
+        end
+        return contracts;
+    end
+
+    --[[
         Contractor.GetActiveContract
         Get the active contract for an NPC or player.
         @param {number|string} masterID Player name or npcID.
@@ -111,13 +126,18 @@ do
         Set the active contract for a contract master.
         @param {string|number} masterID NPC or player the contract came from.
         @param {table} contractData Data regarding the contract.
+        @param {string} masterName Name of the master which gave this contract.
         @return {boolean} True if activated successfully.
     ]]--
-    Contractor.SetActiveContract = function(masterID, contractData)
+    Contractor.SetActiveContract = function(masterID, contractData, masterName)
         local contract = { progress = 0 };
         for key, value in pairs(contractData) do
             contract[key] = value;
         end
+
+        -- Store the masterName in the cloned table.
+        contract.masterName = masterName;
+        contract.masterID = masterID;
 
         -- Store contract entry.
         if Contractor.StoredData.ActiveContracts then

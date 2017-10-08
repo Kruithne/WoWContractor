@@ -14,8 +14,8 @@ do
     --[[ Contract Data ]]--
     local data = {
         [44237] = { -- Maegan Tillman, Pig and Whistle, Stormwind City
-            { targets = {822}, count = 5, textFull = _C.ContractElwynnBearsFull, textShort = _C.ContractElwynnBearsShort },
-            { targets = {474}, count = 5, textFull = _C.ContractElwynnWizardsFull, textShort = _C.ContractElwynnWizardsShort },
+            { targets = {822}, count = 5, textFull = _C.ContractElwynnBearsFull, textShort = _C.ContractElwynnBearsShort, title = _C.ContractElwynnBearsTitle },
+            { targets = {474}, count = 5, textFull = _C.ContractElwynnWizardsFull, textShort = _C.ContractElwynnWizardsShort, title = _C.ContractElwynnWizardsTitle },
         }
     };
 

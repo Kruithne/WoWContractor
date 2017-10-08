@@ -11,6 +11,7 @@ do
     local pairs = pairs;
     local mathrandom = math.random;
     local CloseGossip = CloseGossip;
+    local UnitName = UnitName;
 
     --[[ Constants ]]--
     local Contractor = _Contractor;
@@ -113,6 +114,14 @@ do
     end
 
     --[[
+        Contractor.Events.OnCommand
+        Invoke when a Contractor chat command is executed.
+    ]]--
+    Events.OnCommand = function(msg, editbox)
+        Contractor.UI.ShowContractPane();
+    end
+
+    --[[
         Contractor.Events.Hook_GossipTitleButton_OnClick
         External hook used for intercepting gossip title button clicks.
         @param {Frame} self Gossip frame.
@@ -124,7 +133,7 @@ do
             local contracts = Contractor.GetAvailableContracts(masterID);
             local contract = contracts[mathrandom(#contracts)];
 
-            Contractor.SetActiveContract(masterID, contract);
+            Contractor.SetActiveContract(masterID, contract, UnitName("npc"));
 
             local fullText = contract.textFull:format(contract.count);
             Contractor.UI.ClearGossipOptions();
@@ -169,6 +178,10 @@ do
     Events.frame:RegisterEvent("ADDON_LOADED");
     Events.frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     Events.frame:SetScript("OnEvent", Events.OnEvent);
+
+    --[[ Register Commands ]]--
+    SLASH_CONTRACTOR1, SLASH_CONTRACTOR2, SLASH_CONTRACTOR3 = "/contractor", "/contracts", "/contract";
+    SlashCmdList["CONTRACTOR"] = Events.OnCommand;
 
     -- Add event table into the add-on table.
     Contractor.Events = Events;
