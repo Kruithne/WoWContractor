@@ -157,8 +157,8 @@ do
         Invoked when a contract context menu is opened.
     ]]--
     UI.OnContractMenuOpen = function(frame, level, menuList)
-        -- ToDo: Add proper options. Localize.
-        UIDropDownMenu_AddButton({ text = "Hello poppet." }, level);
+        -- ToDo: Implement this once we add player-contract support.
+        --UIDropDownMenu_AddButton({ text = "Hello poppet." }, level);
     end
 
     --[[
