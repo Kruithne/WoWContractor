@@ -162,6 +162,15 @@ do
     end
 
     --[[
+        Contractor.UI.OnRefreshButtonClick
+        Invoked when the refresh button is clicked.
+        @param {Button} button
+    ]]--
+    UI.OnRefreshButtonClick = function(button)
+        UI.UpdateContractPane();
+    end
+
+    --[[
         Contractor.UI.ShowContractPane
         Show the contract management frame.
     ]]--
@@ -174,6 +183,7 @@ do
             HybridScrollFrame_CreateButtons(container, "ContractorButtonTemplate", 0, 0);
 
             ContractorFrameViewButton:SetText(Contractor.UIButtonText);
+            ContractorFrameViewButton:SetScript("OnClick", )
 
             UIDropDownMenu_Initialize(ContractorFrameDropDown, UI.OnContractMenuOpen, "MENU");
             for _, button in next, container.buttons do
