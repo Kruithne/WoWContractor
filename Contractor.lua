@@ -55,6 +55,10 @@ do
         @return {number} Creature ID.
     ]]--
     Contractor.GetCreatureIDFromGUID = function(guid)
+        if guid == nil then
+            return 0;
+        end
+
         local id = guid:match("^Creature%-%d+%-%d+%-%d+%-%d+%-(%d+)%-%x+");
         return id and tonumber(id) or 0;
     end
