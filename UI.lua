@@ -173,7 +173,7 @@ do
             local container = ContractorFrameViewContainer;
             HybridScrollFrame_CreateButtons(container, "ContractorButtonTemplate", 0, 0);
 
-            ContractorFrameViewButton:SetText("Create Contract"); -- ToDo: Localize.
+            ContractorFrameViewButton:SetText(Contractor.UIButtonText);
 
             UIDropDownMenu_Initialize(ContractorFrameDropDown, UI.OnContractMenuOpen, "MENU");
             for _, button in next, container.buttons do

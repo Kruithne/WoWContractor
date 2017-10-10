@@ -23,6 +23,7 @@ do
         RewardEmote = "%s hands you a small coin purse containing %d silvers.",
 
         FrameContracts = "Contracts",
+        UIButtonText = "Refresh Contracts",
 
         ContractElwynnBearsFull = "slay %d bears roaming the forests of Elwynn",
         ContractElwynnBearsShort = "Bears slain",
