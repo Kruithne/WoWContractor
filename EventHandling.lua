@@ -30,7 +30,7 @@ do
         -- Register new events.
         Events.frame:RegisterEvent("GOSSIP_SHOW");
         Events.frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-        Events.frame:RegisterEvent("PLAYER_CHANGED_TARGET"); -- Debug.
+        Events.frame:RegisterEvent("PLAYER_TARGET_CHANGED"); -- Debug.
 
         -- Initiate persistant storage table.
         if not ContractorData then ContractorData = {}; end
@@ -86,7 +86,7 @@ do
             end
         elseif event == "GOSSIP_SHOW" then
             Events.OnGossip();
-        elseif event == "PLAYER_CHANGED_TARGET" then
+        elseif event == "PLAYER_TARGET_CHANGED" then
             -- ToDo: Remove, this is for debug.
             local targetID = Contractor.GetCreatureID("target");
             if targetID > 0 then
