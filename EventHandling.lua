@@ -12,6 +12,7 @@ do
     local mathrandom = math.random;
     local CloseGossip = CloseGossip;
     local UnitName = UnitName;
+    local PlaySound = PlaySound;
 
     --[[ Constants ]]--
     local Contractor = _Contractor;
