@@ -15,6 +15,10 @@ do
     local UIErrorsFrame = UIErrorsFrame;
     local ERR_QUEST_ADD_FOUND_SII = ERR_QUEST_ADD_FOUND_SII;
     local YELLOW_FONT_COLOR = YELLOW_FONT_COLOR;
+    local HybridScrollFrame_GetOffset = HybridScrollFrame_GetOffset;
+    local HybridScrollFrame_Update = HybridScrollFrame_Update;
+    local ToggleDropDownMenu = ToggleDropDownMenu;
+    local GetCursorPosition = GetCursorPosition;
 
     --[[ Constants ]]--
     local BUTTON_HEIGHT = 84;
