@@ -13,6 +13,10 @@ do
     local CloseGossip = CloseGossip;
     local UnitName = UnitName;
     local PlaySound = PlaySound;
+    local IG_QUEST_LIST_CLOSE = SOUNDKIT.IG_QUEST_LIST_CLOSE;
+    local IG_QUEST_LIST_COMPLETE = SOUNDKIT.IG_QUEST_LIST_COMPLETE;
+    local IG_QUEST_LOG_ABANDON_QUEST = SOUNDKIT.IG_QUEST_LOG_ABANDON_QUEST;
+
 
     --[[ Constants ]]--
     local Contractor = _Contractor;
@@ -141,7 +145,7 @@ do
             Contractor.UI.SetGossipText(Contractor.GossipAcceptedText:format(fullText));
             Contractor.UI.AddGossipOption(Contractor.GossipContractOkay, "ContractorClose", "GossipGossipIcon");
 
-            PlaySound(876); -- igquestlistclose
+            PlaySound(IG_QUEST_LIST_CLOSE);
         elseif self.type == "ContractorProgress" then
             local masterID = Contractor.GetCreatureID("npc");
             local active = Contractor.GetActiveContract(masterID);
@@ -155,7 +159,7 @@ do
             Contractor.HandleReward();
             Contractor.AbandonActiveContract(masterID);
 
-            PlaySound(878); -- igquestlistcomplete
+            PlaySound(IG_QUEST_LIST_COMPLETE);
             CloseGossip();
         elseif self.type == "ContractorAbandon" then
             Contractor.UI.ClearGossipOptions();
@@ -165,7 +169,7 @@ do
             Contractor.UI.AddGossipOption(Contractor.GossipAbandonAbortOption, "ContractorClose", "GossipGossipIcon");
         elseif self.type == "ContractorAbandonConfirm" then
             Contractor.AbandonActiveContract(Contractor.GetCreatureID("npc"));
-            PlaySound(846); -- igquestlogabandonquest
+            PlaySound(IG_QUEST_LOG_ABANDON_QUEST);
             CloseGossip();
         elseif self.type == "ContractorClose" then
             CloseGossip();
