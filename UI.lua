@@ -183,7 +183,7 @@ do
             HybridScrollFrame_CreateButtons(container, "ContractorButtonTemplate", 0, 0);
 
             ContractorFrameViewButton:SetText(Contractor.UIButtonText);
-            ContractorFrameViewButton:SetScript("OnClick", )
+            ContractorFrameViewButton:SetScript("OnClick", UI.OnRefreshButtonClick);
 
             UIDropDownMenu_Initialize(ContractorFrameDropDown, UI.OnContractMenuOpen, "MENU");
             for _, button in next, container.buttons do
